@@ -19,6 +19,7 @@ SRC = \
 	./src/memmove.asm \
 	./src/strcasecmp.asm \
 	./src/rindex.asm \
+	./src/strcspn.asm
 
 OBJ = $(SRC:.asm=.o)
 
