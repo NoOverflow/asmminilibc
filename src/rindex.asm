@@ -33,5 +33,5 @@ rindex:
     jnz .rend
     mov rax, rdi
 
-.rend
+.rend:
     ret

@@ -6,19 +6,15 @@ GLOBAL strlen
 
 strlen:
 
-    push    rbp
-    mov     rbp, rsp
-
     mov rax, 0
 
-_strl_loop_start:
+.loop_start:
 
     cmp [rdi + rax], byte 0
-    jz _strl_loop_end
+    jz .loop_end
     inc rax
-    jmp _strl_loop_start
+    jmp .loop_start
 
-_strl_loop_end:
+.loop_end:
 
-    leave
     ret

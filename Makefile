@@ -19,7 +19,6 @@ SRC = \
 	./src/memset.asm \
 	./src/memcpy.asm \
 	./src/strcmp.asm \
-	./src/strncmp.asm \
 	./src/memmove.asm \
 	./src/strcasecmp.asm \
 	./src/rindex.asm \
@@ -30,6 +29,7 @@ TEST_SRC = \
 	./tests/strcasecmp.c \
 	./tests/strncmp.c \
 	./tests/rindex.c \
+	./tests/strstr.c \
 
 OBJ = $(SRC:.asm=.o)
 TEST_OBJ = $(TEST_SRC:.c=.o)
