@@ -29,6 +29,7 @@ TEST_SRC = \
 	./tests/strcmp.c \
 	./tests/strcasecmp.c \
 	./tests/strncmp.c \
+	./tests/rindex.c \
 
 OBJ = $(SRC:.asm=.o)
 TEST_OBJ = $(TEST_SRC:.c=.o)
