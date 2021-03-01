@@ -6,47 +6,44 @@ GLOBAL strncmp
 
 strncmp:
 
-    push rbp
-    mov rbp, rsp
-    mov rcx, 0
-    mov rax, 0
+    mov rcx, qword 0
+    mov rax, qword 0
 
     ; if (str1 == str2)
     cmp rdi, rsi
-    mov r8, dword 0
-    cmovz rax, r8
-    jz _strncmp_end ; return (0);
+    jz .end ; return (0);
 
-_strncmp_loop_start:
+.loop_start:
+
+    xor rax, rax
 
     cmp rcx, rdx
-    jz _strncmp_loop_end
+    jz .loop_end
 
-    ; for (int rcx = 0; str1[rcx] != '\0' && str2[rcx] != '\0'
-    cmp [rdi + rcx], dword 0
-    jz _strncmp_loop_end
-    cmp [rsi + rcx], dword 0
-    jz _strncmp_loop_end
+    ; for (int rcx = 0; str1[rcx] != '\0' || str2[rcx] != '\0'
+    cmp [rdi + rcx], byte 0
+    jnz .continue
+    cmp [rsi + rcx], byte 0
+    jnz .continue
+    jmp .loop_end
+
+.continue:
 
     ; if (str1[rcx] != str2[rcx])
-    mov bl, byte 0
-    mov bl, [rsi + rcx]
-    cmp bl, [rdi + rcx]
-    jnz _strncmp_loop_neq
+    mov al, [rdi + rcx]
+    sub al, [rsi + rcx]
+    jnz .loop_neq
 
     inc rcx
-    jmp _strncmp_loop_start
+    jmp .loop_start
 
-_strncmp_loop_neq:
+.loop_neq:
 
-    mov rax, 0
-    add al, [rdi + rcx]
-    sub al, [rsi + rcx]
     cbw
     cwde
 
-_strncmp_loop_end:
-_strncmp_end:
+.loop_end:
+.end:
 
-    leave
     ret
+

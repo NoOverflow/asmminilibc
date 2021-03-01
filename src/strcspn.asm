@@ -23,7 +23,7 @@ _strcspn_check_rej_loop_start:
     cmp [rsi + r8], byte 0         ;   if (reject[j] == '\0')
     jz _strcspn_check_rej_loop_end ;        return;
     mov r10b, [rsi + r8]
-    cmp [rdi + rcx], r10b    ;   if (reject[j] != s[i])
+    cmp [rdi + rcx], r10b    ;   if (reject[j] = s[i])
     jz _strcspn_loop_end          ;        return;
     inc r8                         ;   j++
     jmp _strcspn_check_rej_loop_start

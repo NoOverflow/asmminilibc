@@ -4,67 +4,62 @@ SECTION .text
 
 GLOBAL strcasecmp
 
-_strcasecmp_to_lower:
+.to_lower:
 
     cmp r8b, 91
-    jl _strcasecmp_to_lower_l
+    jl .to_lower_l
     ret
-    _strcasecmp_to_lower_l:
+    .to_lower_l:
     cmp r8b, 65
-    jg _strcasecmp_to_lower_g
+    jg .to_lower_g
     ret
-    _strcasecmp_to_lower_g:
+    .to_lower_g:
     add r8b, 32
     ret
 
 strcasecmp:
 
-    push rbp
-    mov rbp, rsp
-    mov rcx, 0
-    mov rax, 0
+    mov rcx, qword 0
+    mov rax, qword 0
 
     ; if (str1 == str2)
     cmp rdi, rsi
-    mov r8, dword 0
-    cmovz rax, r8
-    jz _strcasecmp_end ; return (0);
+    jz .end ; return (0);
 
-_strcasecmp_loop_start:
+.loop_start:
 
+    xor rax, rax
     ; for (int rcx = 0; str1[rcx] != '\0' && str2[rcx] != '\0'
-    cmp [rdi + rcx], dword 0
-    jz _strcasecmp_loop_end
-    cmp [rsi + rcx], dword 0
-    jz _strcasecmp_loop_end
+    cmp [rdi + rcx], byte 0
+    jnz .continue
+    cmp [rsi + rcx], byte 0
+    jnz .continue
+    jmp .loop_end
+
+.continue:
 
     ; b = tolower(str1[rcx])
     mov r8b, [rdi + rcx]
-    call _strcasecmp_to_lower
-    mov r9b, r8b
+    call .to_lower
+    mov al, r8b
 
     ; a = tolower(str2[rcx])
     mov r8b, [rsi + rcx]
-    call _strcasecmp_to_lower
+    call .to_lower
 
     ; if (str1[rcx] != str2[rcx])
-    cmp r8b, r9b
-    jnz _strcasecmp_loop_neq
+    sub al, r8b
+    jnz .loop_neq
 
-    ; rcx++
     inc rcx
-    jmp _strcasecmp_loop_start
+    jmp .loop_start
 
-_strcasecmp_loop_neq:
+.loop_neq:
 
-    mov rax, dword 0
-    add al, r8b
-    sub al, r9b
     cbw
     cwde
 
-_strcasecmp_loop_end:
-_strcasecmp_end:
+.loop_end:
+.end:
 
-    leave
     ret
