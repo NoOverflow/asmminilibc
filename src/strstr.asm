@@ -2,34 +2,46 @@ BITS 64
 
 SECTION .text
 
-GLOBAL ssss
+GLOBAL strstr
 
+; rdi const char *haystack
+; rsi const char *needle
 strstr:
 
     mov rax, qword 0
     mov rcx, qword 0
-    mov r8, rdi
 
+    mov r8, rdi
+    mov rdi, rsi
     call .sstrlen
     mov rdx, rax
     xor rax, rax
+    mov rdi, r8
 
 .loop_start:
 
-    mov rdi, r8
-    cmp rcx, rdx
-    jz .loop_end
+    cmp [rdi + rcx], byte 0
+    jz .loop_ret_null
 
+    mov r12, rdi
     add rdi, rcx
     call .sstrncmp
+    cmp eax, dword 0
     jnz .loop_strncmp_nz
-    mov rax, rdi
+
+    ; !strncmp(&str[i], to_find, len)
+    mov rax, rdi ; return (str + i)
     jz .loop_end
 
 .loop_strncmp_nz:
 
+    mov rdi, r12
     inc rcx
     jmp .loop_start
+
+.loop_ret_null:
+
+    xor rax, rax
 
 .loop_end:
 
@@ -54,7 +66,7 @@ strstr:
 ; strncmp
 .sstrncmp:
 
-    mov rcx, qword 0
+    mov r10, qword 0
     mov rax, qword 0
 
     ; if (str1 == str2)
@@ -65,24 +77,24 @@ strstr:
 
     xor rax, rax
 
-    cmp rcx, rdx
+    cmp r10, rdx
     jz .sstrncmp_end
 
     ; for (int rcx = 0; str1[rcx] != '\0' || str2[rcx] != '\0'
-    cmp [rdi + rcx], byte 0
+    cmp [rdi + r10], byte 0
     jnz .sstrncmp_continue
-    cmp [rsi + rcx], byte 0
+    cmp [rsi + r10], byte 0
     jnz .sstrncmp_continue
     jmp .sstrncmp_loop_end
 
 .sstrncmp_continue:
 
     ; if (str1[rcx] != str2[rcx])
-    mov al, [rdi + rcx]
-    sub al, [rsi + rcx]
+    mov al, [rdi + r10]
+    sub al, [rsi + r10]
     jnz .sstrncmp_loop_neq
 
-    inc rcx
+    inc r10
     jmp .sstrncmp_loop_start
 
 .sstrncmp_loop_neq:
