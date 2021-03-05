@@ -14,3 +14,11 @@ Test(strncmp, compare_equal_strings)
 
     cr_assert(strncmp(s1, s2, 4) == 0);
 }
+
+Test(strncmp, compare_diff_strings)
+{
+    char *s1 = "This is a compl3x string!~";
+    char *s2 = "This_is a compl3x string!~";
+
+    cr_assert(strncmp(s1, s2, 5) != 0);
+}

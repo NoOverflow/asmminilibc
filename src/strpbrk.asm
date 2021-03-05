@@ -2,9 +2,23 @@ BITS 64
 
 SECTION .text
 
-GLOBAL strcspn
+GLOBAL strpbrk
 
-strcspn:
+strpbrk:
+
+    call .sstrcspn
+    add rdi, rax
+    cmp byte [rdi], byte 0
+    jnz .ret_accept
+    mov rax, 0
+    ret
+
+.ret_accept:
+
+    mov rax, rdi
+    ret
+
+.sstrcspn:
 
     mov rcx, qword 0
     mov rax, qword 0

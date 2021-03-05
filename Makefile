@@ -14,7 +14,6 @@ NAME = libasm.so
 TEST_NAME = tests_bin
 
 SRC = \
-	./src/strlen.asm \
 	./src/strchr.asm \
 	./src/memset.asm \
 	./src/memcpy.asm \
@@ -23,6 +22,10 @@ SRC = \
 	./src/strcasecmp.asm \
 	./src/rindex.asm \
 	./src/strcspn.asm \
+	./src/strstr.asm \
+	./src/strncmp.asm \
+	./src/strlen.asm \
+	./src/strpbrk.asm \
 
 TEST_SRC = \
 	./tests/strcmp.c \
@@ -30,6 +33,7 @@ TEST_SRC = \
 	./tests/strncmp.c \
 	./tests/rindex.c \
 	./tests/strstr.c \
+	./tests/strpbrk.c \
 
 OBJ = $(SRC:.asm=.o)
 TEST_OBJ = $(TEST_SRC:.c=.o)
@@ -61,7 +65,7 @@ test_bin: all
 	gcc $(CFLAGS) $(LDFLAGS) -L./ src/tester.c -lasm
 
 tests_run: fclean $(NAME) $(TEST_NAME)
-	./$(TEST_NAME)
+	LD_PRELOAD=./libasm.so ./$(TEST_NAME)
 
 .PHONY: run
 run: $(NAME)

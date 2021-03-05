@@ -11,15 +11,15 @@ memset:
     mov rcx, 0
     mov rax, rdi
 
-_memset_loop_start:
+.loop_start:
 
     cmp rdx, rcx
-    jz _memset_loop_end
+    jz .loop_end
     mov [rdi + rcx], sil
     inc rcx
-    jmp _memset_loop_start
+    jmp .loop_start
 
-_memset_loop_end:
+.loop_end:
 
     leave
     ret

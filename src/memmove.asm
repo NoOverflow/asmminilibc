@@ -12,28 +12,28 @@ memmove:
 
     cmp rdi, rsi ; if (dest < src)
 
-    jl _memmove_forward
+    jl .forward
     sub rdx, 1
 
-_memmove_backward:
+.backward:
 
     cmp rdx, -1
-    je _memmove_end
+    je .end
     mov r8b, [rsi + rdx]
     mov [rdi + rdx], r8b
     sub rdx, 1
-    jmp _memmove_backward
+    jmp .backward
 
-_memmove_forward:
+.forward:
 
     cmp rcx, rdx
-    je _memmove_end
+    je .end
     mov r8b, [rsi + rcx]
     mov [rdi + rcx], r8b
     add rcx, 1
-    jmp _memmove_forward
+    jmp .forward
 
-_memmove_end:
+.end:
 
     ret
 

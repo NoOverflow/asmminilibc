@@ -12,30 +12,30 @@ strchr:
     mov rcx, 0
     mov rax, 0
 
-_strchr_loop_start:
+.loop_start:
 
     cmp [rdi + rcx], byte 0
-    jnz _strchr_loop_check_char
+    jnz .loop_check_char
 
     mov rax, 0
     add rax, rdi
     add rax, rcx
     cmp rsi, byte 0
-    jz _strchr_loop_end
+    jz .loop_end
     mov rax, 0
-    jmp _strchr_loop_end
+    jmp .loop_end
 
-_strchr_loop_check_char:
+.loop_check_char:
 
     mov rax, 0
     add rax, rdi
     add rax, rcx
     cmp [rdi + rcx], sil
-    jz _strchr_loop_end
+    jz .loop_end
     inc rcx
-    jmp _strchr_loop_start
+    jmp .loop_start
 
-_strchr_loop_end:
+.loop_end:
 
     leave
     ret
